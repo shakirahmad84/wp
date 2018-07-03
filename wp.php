@@ -489,3 +489,74 @@ wp_reset_query();
         </div>
     </div>
 </div>
+
+/***********************************
+** Introduction Metabox Framework **
+************************************/
+https://www.advancedcustomfields.com/
+https://github.com/CMB2/CMB2/
+http://codestarframework.com/
+http://www.titanframework.net/
+
+/********************************************************
+** ACF installation with TGM plugin activation library **
+*********************************************************/
+http://tgmpluginactivation.com/
+1. Download TGM Plugin
+2. copy the file (class-tgm-plugin-activation.php) to lib folder
+3. copy the file (example.php) to inc folder and name it tgm.php
+4. change in tgm.php
+
+<?php
+require_once get_theme_file_path( '/lib/class-tgm-plugin-activation.php' );
+$plugins = array(
+	array(
+		'name'     => 'ACF',
+		'slug'     => 'advanced-custom-fields',
+		'required' => false,
+	),
+);
+?>
+
+5. add in functions.php
+<?php require_once get_theme_file_path( '/inc/tgm.php' ); ?>
+
+6. add in functions.php for ACF updated plugin
+<?php define( 'ACF_EARLY_ACCESS', '5' ); ?>
+
+/***********************************
+** Display Data in ACF Meta field **
+************************************/
+<?php
+if ( get_post_format() == "image" && function_exists( "the_field" ) ):
+	?>
+    <div class="metainfo">
+
+        <strong>Camera Model: </strong><?php the_field( "camera_model" ); ?>
+        <br>
+
+        <strong>Location: </strong>
+		<?php
+		$alpha_location = get_field( "location" );
+		echo esc_html( $alpha_location );
+		?>
+        <br>
+
+        <strong>Date: </strong><?php the_field( "date" ); ?><br>
+        <strong>Camera Model: </strong><?php the_field( "camera_model" ); ?>
+        <br>
+		<?php if ( get_field( "licensed" ) ): ?>
+			<?php echo apply_filters( "the_content", get_field( "license_information" ) ); ?>
+		<?php endif; ?>
+
+    </div>
+<?php endif; ?>
+
+/********************
+** ACF Image field **
+*********************/
+<?php
+$alpha_image         = get_field( "image" );
+$alpha_image_details = wp_get_attachment_image_src( $alpha_image, "alpha-square" );
+echo "<img src=" . esc_url( $alpha_image_details[0] ) . ">";
+?>
