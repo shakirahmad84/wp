@@ -1,4 +1,3 @@
-<?php
 /*
 Theme Name:
 Theme URI: https://shakirahmad.com
@@ -11,28 +10,26 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:
 Tags: one-column, two-columns, right-sidebar, flexible-header, accessibility-ready, custom-colors, custom-header, custom-menu, custom-logo, editor-style, featured-images, footer-widgets, post-formats, rtl-language-support, sticky-post, theme-options, threaded-comments, translation-ready
 */
-?>
 
 <html <?php language_attributes(); ?>>
-
-    <meta charset="<?php bloginfo( 'charset' ); ?>">
+<meta charset="<?php bloginfo( 'charset' ); ?>">
 
 <?php wp_head(); ?>
-    </head>
+</head>
 
-    <body <?php body_class(); ?>>
+<body <?php body_class(); ?>>
 
-    <div <?php post_class(); ?>>
+<div <?php post_class(); ?>>
 
-		<?php wp_footer(); ?>
-    </body>
+	<?php wp_footer(); ?>
+</body>
 
 <?php bloginfo( 'name' ); ?>
-    <a href="<?php echo site_url(); ?>"><?php bloginfo( 'name' ); ?></a>
+<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php bloginfo( 'name' ); ?></a>
 <?php bloginfo( 'description' ); ?>
 
 <?php the_title(); ?>
-    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 <?php the_author(); ?>
 <?php echo get_the_date(); ?>
 
@@ -40,8 +37,7 @@ Tags: one-column, two-columns, right-sidebar, flexible-header, accessibility-rea
 
 <?php if ( has_post_thumbnail() ) {
 	the_post_thumbnail( 'large', array( 'class' => 'img-fluid"' ) );
-}
-; ?>
+}; ?>
 
 <?php the_content(); ?>
 <?php the_excerpt(); ?>
@@ -180,8 +176,7 @@ if ( has_post_thumbnail() ) {
 	echo '<a href="' . $thumbnail_url . '" data-featherlight="image">';
 	the_post_thumbnail( 'large', array( 'class' => 'img-fluid"' ) );
 	echo '</a>';
-}
-;
+};
 ?>
 
 <?php
@@ -190,30 +185,28 @@ if ( has_post_thumbnail() ) {
 	printf( '<a href="%s" data-featherlight="image">', $thumbnail_url );
 	the_post_thumbnail( 'large', array( 'class' => 'img-fluid"' ) );
 	echo '</a>';
-}
-;
+};
 ?>
 
-    // OR
+// OR
 
 <?php
 if ( has_post_thumbnail() ) {
 	echo '<a class="popup" href="" data-featherlight="image">';
 	the_post_thumbnail( 'large', array( 'class' => 'img-fluid"' ) );
 	echo '</a>';
-}
-;
+};
 ?>
-    <script>
-        ;(function ($) {
-            $(document).ready(function () {
-                $(".popup").each(function () {
-                    var image = $(this).find('img').attr('src');
-                    $(this).attr('href', image);
-                });
+<script>
+    ;(function ($) {
+        $(document).ready(function () {
+            $(".popup").each(function () {
+                var image = $(this).find('img').attr('src');
+                $(this).attr('href', image);
             });
-        })(jQuery);
-    </script>
+        });
+    })(jQuery);
+</script>
 
 
 <?php
@@ -292,3 +285,207 @@ function alpha_bootstrapping() {
 
 add_action( "after_setup_theme", "alpha_bootstrapping" );
 ?>
+
+<?php
+$placeholder_text = get_post_meta( get_the_ID(), 'placeholder', true );
+$hint             = get_post_meta( get_the_ID(), 'hint', true );
+?>
+
+<?php echo esc_attr( $placeholder_text ); ?>
+<?php echo esc_html( $hint ); ?>
+
+/**********************
+** Custom Post Query **
+***********************/
+<?php
+
+$_p = get_posts( array(
+	'post__in' => array( 30, 7, 36 ), // Post ID
+	'order'    => 'asc'
+) );
+
+$_p = get_posts( array(
+	'post__in'       => array( 30, 7, 36 ), // Post ID
+	'orderby'        => 'post__in',
+	'posts_per_page' => 2,
+) );
+
+foreach ( $_p as $post ) {
+	setup_postdata( $post );
+	?>
+    <h2><?php the_title(); ?></h2>
+	<?php
+}
+wp_reset_postdata();
+?>
+/***************************
+** Custom Post Pagination **
+****************************/
+<?php
+$paged          = get_query_var( "paged" ) ? get_query_var( "paged" ) : 1;
+$posts_per_page = 2;
+$total          = 9;
+$post_ids       = array( 30, 7, 36 );
+$_p             = get_posts( array(
+//	'post__in'       => $post_ids,
+	'author__in'     => array( 1 ),
+	'numberposts'    => $total,
+	'orderby'        => 'post__in',
+	'posts_per_page' => 2,
+	'paged'          => $paged,
+) );
+
+foreach ( $_p as $post ) {
+	setup_postdata( $post );
+	?>
+    <h2><?php the_title(); ?></h2>
+	<?php
+}
+wp_reset_postdata();
+?>
+
+<div class="container post-pagination">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
+			<?php
+			echo paginate_links( array(
+//					'total' => ceil( count( $post_ids ) / $posts_per_page )
+				'total' => ceil( $total / $posts_per_page )
+			) );
+			?>
+        </div>
+    </div>
+</div>
+/******************************
+** WP_Query Class Pagination **
+*******************************/
+<?php
+$paged          = get_query_var( "paged" ) ? get_query_var( "paged" ) : 1;
+$posts_per_page = 2;
+$total          = 9;
+$post_ids       = array( 30, 7, 36 );
+$_p             = new WP_Query( array(
+//	'author__in'     => array( 1 ),
+//	'numberposts'    => $total,
+//	'orderby'        => 'post__in',
+//	'posts_per_page' => 2,
+//	'paged'          => $paged,
+	'category_name'  => 'uncategorized',
+	'posts_per_page' => $posts_per_page,
+	'paged'          => $paged,
+) );
+
+while ( $_p->have_Posts() ) {
+	$_p->the_post();
+	?>
+    <h2 class="text-center"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+	<?php
+}
+wp_reset_query();
+?>
+
+<div class="container post-pagination">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
+			<?php
+			echo paginate_links( array(
+				'total'     => $_p->max_num_pages,
+				'current'   => $paged,
+				'prev_next' => false,
+			) );
+			?>
+        </div>
+    </div>
+</div>
+/******************************
+** WP_Query Class Pagination **
+*******************************/
+
+/******************************************
+** WP_Query Class Relationship & Joining **
+*******************************************/
+<?php
+$paged          = get_query_var( "paged" ) ? get_query_var( "paged" ) : 1;
+$posts_per_page = 2;
+$total          = 9;
+$post_ids       = array( 30, 7, 36 );
+$_p             = new WP_Query( array(
+	'posts_per_page' => $posts_per_page,
+	'paged'          => $paged,
+	'tax_query'      => array(
+		'relation' => 'OR',
+		array(
+			'taxonomy' => 'category',
+			'field'    => 'slug',
+			'terms'    => array( 'new' )
+		),
+		array(
+			'taxonomy' => 'post_tag',
+			'field'    => 'slug',
+			'terms'    => array( 'special' )
+		)
+	)
+) );
+
+while ( $_p->have_posts() ) {
+	$_p->the_post();
+	?>
+    <h2 class="text-center"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+	<?php
+}
+wp_reset_query();
+?>
+
+<div class="container post-pagination">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
+			<?php
+			echo paginate_links( array(
+				'total'     => $_p->max_num_pages,
+				'current'   => $paged,
+				'prev_next' => false,
+			) );
+			?>
+        </div>
+    </div>
+</div>
+/***************************************
+** WP_Query - Search With Date & Post **
+****************************************/
+<?php
+$paged          = get_query_var( "paged" ) ? get_query_var( "paged" ) : 1;
+$posts_per_page = 2;
+$total          = 9;
+$post_ids       = array( 30, 7, 36 );
+$_p             = new WP_Query( array(
+	'monthnum'    => 6,
+	'year'        => 2018,
+	'post_status' => 'draft',
+) );
+
+while ( $_p->have_posts() ) {
+	$_p->the_post();
+	?>
+    <h2 class="text-center"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+	<?php
+}
+wp_reset_query();
+?>
+
+<div class="container post-pagination">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
+			<?php
+			echo paginate_links( array(
+				'total'     => $_p->max_num_pages,
+				'current'   => $paged,
+				'prev_next' => false,
+			) );
+			?>
+        </div>
+    </div>
+</div>
