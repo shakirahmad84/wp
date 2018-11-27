@@ -560,3 +560,56 @@ $alpha_image         = get_field( "image" );
 $alpha_image_details = wp_get_attachment_image_src( $alpha_image, "alpha-square" );
 echo "<img src=" . esc_url( $alpha_image_details[0] ) . ">";
 ?>
+
+	
+/*******************************
+** Custom Post With Shortcode **
+********************************/	
+// Image Gallery Custom Post Type Function
+function shakir_image_gallery() {
+    register_post_type( 'shakir_gallery',
+        array(
+            'labels' => array(
+                'name' => __( 'Image Gallery' ),
+            ),
+            'public' => true,
+            'menu_position' => 20,
+            'supports' => array( 'title', 'thumbnail' )
+        )
+    );
+}
+// Hooking up custom post type function to theme
+add_action( 'init', 'shakir_image_gallery' );
+
+function shakir_image() {
+    echo '<div class="image-with-text">
+    <div class="container">
+		<div class="row">'
+		?>
+        <?php
+        $loop = new WP_Query(array(
+            'post_type' => 'shakir_gallery',
+            'posts_per_page' => 4
+        ));
+        while ($loop->have_posts()) {
+            $loop->the_post();
+            $image_gallery_link_one = get_post_meta(get_the_ID(), 'image_gallery_link_one', true);
+            $page_thumb = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'full');
+            ?>
+
+            <div class="col-lg-6 d-flex justify-content-center">
+                <div class="background-image" style="background-image:url('<?php echo $page_thumb[0]; ?>');">
+                    <a href="'<?php echo $image_gallery_link_one; ?>'">
+                        <h3><?php the_title(); ?></h3>
+                    </a>
+                </div>
+            </div>
+
+        <?php } ?>
+        </div>
+    </div>
+</div>
+<?php
+
+}
+add_shortcode('shakir', 'shakir_image');
