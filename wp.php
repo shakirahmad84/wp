@@ -613,3 +613,67 @@ function shakir_image() {
 
 }
 add_shortcode('shakir', 'shakir_image');
+	
+	
+	
+/*******************************
+ ** Custom Post With Shortcode **
+ ********************************/	
+// Image Gallery Custom Post Type Function
+function shakir_image_gallery()
+{
+        register_post_type(
+                'shakir_gallery',
+                array(
+                        'labels' => array(
+                                'name' => __('Image Gallery'),
+                        ),
+                        'public' => true,
+                        'menu_position' => 20,
+                        'supports' => array('title', 'editor', 'thumbnail', 'custom-fields')
+                )
+        );
+}
+add_action('init', 'shakir_image_gallery');
+
+// Image Gallery Shortcode
+function shakir_image(){
+        $loop = new WP_Query(array(
+                'post_type' => 'shakir_gallery',
+                'orderby' => 'rand',
+                'posts_per_page' => -1,
+        ));
+
+        if ( $loop->have_posts() ) {
+
+                $output = '<section class="image-gallery"><div class="container"><div class="row">';
+                while ($loop->have_posts()) {
+                        $loop->the_post();
+                        $image_gallery_link = get_post_meta(get_the_ID(), 'image_gallery_link', true);
+
+                        $output .= '
+                                <div class="col-lg-3 d-flex justify-content-center mb-5">
+					<div class="card" style="width: 18rem;">
+                                        	<a href="'.$image_gallery_link.'">      
+							'.get_the_post_thumbnail( null, "large", "array(\"class\"=>\"card-img-top\")" ).'
+                                        	</a>
+						<div class="card-body">
+							<h5 class="card-title text-center">
+								<a href="'.$image_gallery_link.'"> 
+									'.get_the_title().'
+								</a>
+                                        		</h5>
+							<p class="card-text">
+                                        			'.get_the_content().'
+							</p>
+						</div>
+                                        </div>
+                                </div>';
+                }
+                $output .= '</div></div></section>';
+        } else {
+                $output = "Content Not Added.";
+        }
+        return $output;
+}
+add_shortcode('beachesliving_random_image_gallery', 'shakir_image');
