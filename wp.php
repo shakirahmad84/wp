@@ -677,3 +677,18 @@ function shakir_image(){
         return $output;
 }
 add_shortcode('beachesliving_random_image_gallery', 'shakir_image');
+	
+// adding class to a tag
+function anchor_link_class( $atts, $item, $args ) {
+    $class = 'page-scroll'; 
+    $atts['class'] = $class;
+    return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'anchor_link_class', 10, 3 );
+
+// adding class to li tag
+function my_class( $classes, $item ) {
+    $classes[] = 'page-scroll'; 
+    return $classes;
+}
+add_filter( 'nav_menu_css_class', 'my_class', 10, 2 );
