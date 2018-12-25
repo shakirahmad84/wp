@@ -692,3 +692,64 @@ function my_class( $classes, $item ) {
     return $classes;
 }
 add_filter( 'nav_menu_css_class', 'my_class', 10, 2 );
+	
+	
+	
+	
+	
+<!-- Preloader -->
+<!--HTML-->
+<div class="loader">
+	<div class="spinner"></div>
+</div>
+
+
+<!--CSS-->
+<style>
+.loader{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #525252;
+}
+.spinner{
+    width: 40px;
+    height: 40px;
+    border: 5px solid #fff;
+    border-radius: 100%;
+    margin: 50vh auto;
+    transform: translateY(-50%);
+    position: relative;
+}
+.spinner:after{
+    content: "";
+    position: absolute;
+    top: -5px;
+    left:-5px;
+    width: 40px;
+    height: 40px;
+    border: 5px solid transparent;
+    border-top: 5px solid #00aff0;
+    border-radius: 100%;
+    transform: rotate(45deg);
+    animation: wheel 1s ease-in-out infinite;
+}
+@keyframes wheel{
+    from{transform: rotate(45deg);}
+    to{transform: rotate(405deg)}
+}
+</style>
+
+
+<!--jQuery-->
+<script>
+(function ($) {
+
+    $(window).on('load', function(){
+        $('.loader').fadeOut();
+    });
+
+})(jQuery);
+</script>
