@@ -753,3 +753,22 @@ add_filter( 'nav_menu_css_class', 'my_class', 10, 2 );
 
 })(jQuery);
 </script>
+	
+	
+	
+	
+	
+<!--jQuery-->
+<script>
+(function ($) {
+
+// Write Code
+
+})(jQuery);
+
+ jQuery(document).ready(function ($) {
+
+// Write Code
+
+ });
+</script>
