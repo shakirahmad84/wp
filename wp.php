@@ -707,12 +707,15 @@ add_filter( 'nav_menu_css_class', 'my_class', 10, 2 );
 <!--CSS-->
 <style>
 .loader{
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
     background-color: #525252;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
 }
 .spinner{
     width: 40px;
