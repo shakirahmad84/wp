@@ -182,7 +182,10 @@ foreach ( glob( "*.js" ) as $js ) {
 	echo "wp_enqueue_script( 'wptheme-{$js}', get_template_directory_uri() . '/js/{$js}', array('jquery'), '1.0', true );\n";
 }
 ?>
-
+<?php
+// Google Map API Key
+https://console.cloud.google.com
+?>
 <?php
 if ( has_post_thumbnail() ) {
 	$thumbnail_url = get_the_post_thumbnail_url( null, 'large' );
