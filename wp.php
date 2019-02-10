@@ -184,7 +184,12 @@ foreach ( glob( "*.js" ) as $js ) {
 ?>
 <?php
 // Google Map API Key
-https://console.cloud.google.com
+1. Go to https://console.cloud.google.com
+2. Click on APIs & Services >> Credentials >> Create credentials >> API key >> Restrict kye
+3. Name it as your choich
+4. Select the HTTP referrers (web sites)
+5. Keep your Homepage URL and save it.
+6. copy the key and replace
 ?>
 <?php
 if ( has_post_thumbnail() ) {
