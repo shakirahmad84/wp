@@ -169,6 +169,19 @@ function alpha_assets() {
 
 add_action( 'wp_enqueue_scripts', 'alpha_assets' );
 ?>
+	
+#!/usr/bin/env php
+<?php
+foreach ( glob( "*.css" ) as $css ) {
+	echo "wp_enqueue_style( 'wptheme-{$css}', get_template_directory_uri() . '/css/{$css}', null, '1.0' );\n";
+}
+?>
+#!/usr/bin/env php
+<?php
+foreach ( glob( "*.js" ) as $js ) {
+	echo "wp_enqueue_script( 'wptheme-{$js}', get_template_directory_uri() . '/js/{$js}', array('jquery'), '1.0', true );\n";
+}
+?>
 
 <?php
 if ( has_post_thumbnail() ) {
