@@ -14,7 +14,7 @@ Tags: one-column, two-columns, right-sidebar, flexible-header, accessibility-rea
 ?>
 
 <html <?php language_attributes(); ?>>
-<meta charset="<?php bloginfo( 'charset' ); ?>">
+<meta charset="<?php bloginfo('charset'); ?>">
 
 <?php wp_head(); ?>
 </head>
@@ -23,10 +23,10 @@ Tags: one-column, two-columns, right-sidebar, flexible-header, accessibility-rea
 
 <div <?php post_class(); ?>>
 
-	<?php wp_footer(); ?>
+    <?php wp_footer(); ?>
 </body>
 
-<?php echo esc_url( get_template_directory_uri() ); ?>
+<?php echo esc_url(get_template_directory_uri()); ?>
 
 <?php
 function alpha_bootstrapping()
@@ -41,7 +41,12 @@ function alpha_bootstrapping()
     }
 
     add_theme_support('html5', array('comment-list', 'comment-form', 'search-form', 'gallery', 'caption'));
+
+
+    // Custom Background
     add_theme_support('custom-background');
+    // To Show use below function into <body> tag.
+    body_class();
 
     add_theme_support('post-formats', array('aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat'));
     // add post-formats to post_type 'page'
@@ -59,6 +64,7 @@ function alpha_bootstrapping()
     add_theme_support('customize-selective-refresh-widgets');
 
 
+    // Custom Header
     add_theme_support('custom-header', array(
         'default-image' => get_template_directory_uri() . 'img/default-image.jpg', ,
         'random-default' => false,
@@ -81,168 +87,181 @@ function alpha_bootstrapping()
     OR
 
     if (get_header_image()) : ?>
-<div id="site-header">
-    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-        <img src="<?php header_image(); ?>" width="<?php echo absint( get_custom_header()->width ); ?>"
-             height="<?php echo absint( get_custom_header()->height ); ?>"
-             alt="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>">
-    </a>
-</div>
-<?php endif;
+        <div id="site-header">
+            <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+                <img src="<?php header_image(); ?>" width="<?php echo absint(get_custom_header()->width); ?>"
+                     height="<?php echo absint(get_custom_header()->height); ?>"
+                     alt="<?php echo esc_attr(get_bloginfo('name', 'display')); ?>">
+            </a>
+        </div>
+    <?php endif;
 
-add_theme_support( 'custom-logo', array(
-	'height'      => 100,
-	'width'       => 400,
-	'flex-height' => true,
-	'flex-width'  => true,
-	'header-text' => array( 'site-title', 'site-description' ),
-) );
-if ( function_exists( 'the_custom_logo' ) ) {
-	the_custom_logo();
+    add_theme_support('custom-logo', array(
+        'height' => 100,
+        'width' => 400,
+        'flex-height' => true,
+        'flex-width' => true,
+        'header-text' => array('site-title', 'site-description'),
+    ));
+    if (function_exists('the_custom_logo')) {
+        the_custom_logo();
+    }
+
+    register_nav_menus(
+        array(
+            'header-menu' => __('Header Menu', 'alpha'),
+            'extra-menu' => __('Extra Menu', 'alpha')
+        )
+    );
+    wp_nav_menu(array(
+        'theme_location' => 'extra-menu',
+        'menu' => '',
+        'menu_class' => '',
+        'menu_id' => '',
+        'container' => '',
+        'container_class' => '',
+        'container_id' => '',
+        'fallback_cb' => 'wp_page_menu',
+        'before' => '',
+        'after' => '',
+        'link_before' => '',
+        'link_after' => '',
+        'echo' => true,
+        'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+        'item_spacing' => 'preserve',
+        'depth' => 0,
+        'walker' => '',
+    ));
+    wp_nav_menu(array $args = array(
+        'menu' => '',
+        // (int|string|WP_Term) Desired menu. Accepts a menu ID, slug, name, or object.
+        'menu_class' => '',
+        // (string) CSS class to use for the ul element which forms the menu. Default 'menu'.
+        'menu_id' => '',
+        // (string) The ID that is applied to the ul element which forms the menu. Default is the menu slug, incremented.
+        'container' => '',
+        // (string) Whether to wrap the ul, and what to wrap it with. Default 'div'.
+        'container_class' => '',
+        // (string) Class that is applied to the container. Default 'menu-{menu slug}-container'.
+        'container_id' => '',
+        // (string) The ID that is applied to the container.
+        'fallback_cb' => '',
+        // (callable|bool) If the menu doesn't exists, a callback function will fire. Default is 'wp_page_menu'. Set to false for no fallback.
+        'before' => '',
+        // (string) Text before the link markup.
+        'after' => '',
+        // (string) Text after the link markup.
+        'link_before' => '',
+        // (string) Text before the link text.
+        'link_after' => '',
+        // (string) Text after the link text.
+        'echo' => '',
+        // (bool) Whether to echo the menu or return it. Default true.
+        'depth' => '',
+        // (int) How many levels of the hierarchy are to be included. 0 means all. Default 0.
+        'walker' => '',
+        // (object) Instance of a custom walker class.
+        'theme_location' => '',
+        // (string) Theme location to be used. Must be registered with register_nav_menu() in order to be selectable by the user.
+        'items_wrap' => '',
+        // (string) How the list items should be wrapped. Default is a ul with an id and class. Uses printf() format with numbered placeholders.
+        'item_spacing' => ''
+        // (string) Whether to preserve whitespace within the menu's HTML. Accepts 'preserve' or 'discard'. Default 'preserve'.
+    )
+    );
+
 }
 
-register_nav_menus(
-	array(
-		'header-menu' => __( 'Header Menu', 'alpha' ),
-		'extra-menu'  => __( 'Extra Menu', 'alpha' )
-	)
-);
-wp_nav_menu( array(
-	'theme_location'  => 'extra-menu',
-	'menu'            => '',
-	'menu_class'      => '',
-	'menu_id'         => '',
-	'container'       => '',
-	'container_class' => '',
-	'container_id'    => '',
-	'fallback_cb'     => 'wp_page_menu',
-	'before'          => '',
-	'after'           => '',
-	'link_before'     => '',
-	'link_after'      => '',
-	'echo'            => true,
-	'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-	'item_spacing'    => 'preserve',
-	'depth'           => 0,
-	'walker'          => '',
-) );
-wp_nav_menu( array $args = array(
-	'menu'            => '',
-	// (int|string|WP_Term) Desired menu. Accepts a menu ID, slug, name, or object.
-	'menu_class'      => '',
-	// (string) CSS class to use for the ul element which forms the menu. Default 'menu'.
-	'menu_id'         => '',
-	// (string) The ID that is applied to the ul element which forms the menu. Default is the menu slug, incremented.
-	'container'       => '',
-	// (string) Whether to wrap the ul, and what to wrap it with. Default 'div'.
-	'container_class' => '',
-	// (string) Class that is applied to the container. Default 'menu-{menu slug}-container'.
-	'container_id'    => '',
-	// (string) The ID that is applied to the container.
-	'fallback_cb'     => '',
-	// (callable|bool) If the menu doesn't exists, a callback function will fire. Default is 'wp_page_menu'. Set to false for no fallback.
-	'before'          => '',
-	// (string) Text before the link markup.
-	'after'           => '',
-	// (string) Text after the link markup.
-	'link_before'     => '',
-	// (string) Text before the link text.
-	'link_after'      => '',
-	// (string) Text after the link text.
-	'echo'            => '',
-	// (bool) Whether to echo the menu or return it. Default true.
-	'depth'           => '',
-	// (int) How many levels of the hierarchy are to be included. 0 means all. Default 0.
-	'walker'          => '',
-	// (object) Instance of a custom walker class.
-	'theme_location'  => '',
-	// (string) Theme location to be used. Must be registered with register_nav_menu() in order to be selectable by the user.
-	'items_wrap'      => '',
-	// (string) How the list items should be wrapped. Default is a ul with an id and class. Uses printf() format with numbered placeholders.
-	'item_spacing'    => ''
-	// (string) Whether to preserve whitespace within the menu's HTML. Accepts 'preserve' or 'discard'. Default 'preserve'.
-)
-);
-
-}
-
-add_action( "after_setup_theme", "alpha_bootstrapping" );
+add_action("after_setup_theme", "alpha_bootstrapping");
 ?>
 
 <?php
 // adding class to a tag
-function anchor_link_class( $atts, $item, $args ) {
-	$class         = 'page-scroll';
-	$atts['class'] = $class;
+function anchor_link_class($atts, $item, $args)
+{
+    $class         = 'page-scroll';
+    $atts['class'] = $class;
 
-	return $atts;
+    return $atts;
 }
 
-add_filter( 'nav_menu_link_attributes', 'anchor_link_class', 10, 3 );
+add_filter('nav_menu_link_attributes', 'anchor_link_class', 10, 3);
 
 // adding class to li tag
-function my_class( $classes, $item ) {
-	$classes[] = 'page-scroll';
+function my_class($classes, $item)
+{
+    $classes[] = 'page-scroll';
 
-	return $classes;
+    return $classes;
 }
 
-add_filter( 'nav_menu_css_class', 'my_class', 10, 2 );
+add_filter('nav_menu_css_class', 'my_class', 10, 2);
 
 ?>
 
 
-<?php bloginfo( 'name' ); ?>
-<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php bloginfo( 'name' ); ?></a>
-<?php bloginfo( 'description' ); ?>
+// Read More with Trim Words
+<?php if (is_single()) : ?>
+    <?php the_content(); ?>
+<?php else: ?>
+    <?php
+    $readmore = '<p><a href="' . get_permalink() . '">Read More</a></p>';
+    echo wp_trim_words(get_the_content(), 5, $readmore);
+    ?>
+<?php endif; ?>
+
+
+<?php bloginfo('name'); ?>
+<a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>
+<?php bloginfo('description'); ?>
 
 <?php the_title(); ?>
 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 <?php the_author(); ?>
-<?php echo get_the_date( 'jS F, Y' ); ?>
+<?php echo get_the_date('jS F, Y'); ?>
 
-<?php echo get_the_tag_list( '<ul class="list-unstyled"><li>', '</li><li>', '</li></ul>' ); ?>
+<?php echo get_the_tag_list('<ul class="list-unstyled"><li>', '</li><li>', '</li></ul>'); ?>
 
-<?php if ( has_post_thumbnail() ) {
-	the_post_thumbnail( 'large', array( 'class' => 'img-fluid"' ) );
+<?php if (has_post_thumbnail()) {
+    the_post_thumbnail('large', array('class' => 'img-fluid"'));
 }; ?>
 
 <?php the_content(); ?>
 <?php the_excerpt(); ?>
 
 <?php
-if ( is_single() ) {
-	the_content();
+if (is_single()) {
+    the_content();
 } else {
-	the_excerpt();
+    the_excerpt();
 }
 ?>
 
 <?php
 
-next_posts_link( 'Older posts' );
-previous_posts_link( 'Newer posts' );
+next_posts_link('Older posts');
+previous_posts_link('Newer posts');
 
-the_posts_pagination( array(
-	'mid_size'           => 2,
-	'prev_text'          => _x( 'New Posts', 'previous set of posts' ),
-	'next_text'          => _x( 'Old Posts', 'next set of posts' ),
-	'screen_reader_text' => __( ' ' )
-) );
+the_posts_pagination(array(
+    'mid_size' => 2,
+    'prev_text' => _x('New Posts', 'previous set of posts'),
+    'next_text' => _x('Old Posts', 'next set of posts'),
+    'screen_reader_text' => __(' ')
+));
 
 ?>
 
 <?php if (comments_open()): ?>
-<div class="col-md-10 offset-md-1">
-	<?php
-	comments_template();
-	?>
-</div>
+    <div class="col-md-10 offset-md-1">
+        <?php
+        comments_template();
+        ?>
+    </div>
 <?php endif; ?>
 
 <?php get_header(); ?>
 <?php get_footer(); ?>
-<?php get_template_part( 'hero' ); ?>
+<?php get_template_part('hero'); ?>
 
 <?php
 next_post_link();
@@ -251,110 +270,114 @@ previous_post_link();
 ?>
 
 <?php
-function alpha_sidebar() {
-	register_sidebar( array(
-		'name'          => __( 'Single Post Sidebar', 'alpha' ),
-		'id'            => 'primary',
-		'description'   => __( 'Right Sidebar', 'alpha' ),
-		'class'         => '',
-		'before_widget' => '<section id="%1$s" class="widget %2$s">',
-		'after_widget'  => '</section>',
-		'before_title'  => '<h2 class="widget-title">',
-		'after_title'   => '</h2>',
-	) );
+function alpha_sidebar()
+{
+    register_sidebar(array(
+        'name' => __('Single Post Sidebar', 'alpha'),
+        'id' => 'primary',
+        'description' => __('Right Sidebar', 'alpha'),
+        'class' => '',
+        'before_widget' => '<section id="%1$s" class="widget %2$s">',
+        'after_widget' => '</section>',
+        'before_title' => '<h2 class="widget-title">',
+        'after_title' => '</h2>',
+    ));
 }
 
-add_action( 'widgets_init', 'alpha_sidebar' );
+add_action('widgets_init', 'alpha_sidebar');
 
-if ( is_active_sidebar( 'primary' ) ) {
-	dynamic_sidebar( 'primary' );
+if (is_active_sidebar('primary')) {
+    dynamic_sidebar('primary');
 }
 ?>
 
 <?php
-if ( ! post_password_required() ) {
-	the_excerpt();
+if (!post_password_required()) {
+    the_excerpt();
 } else {
-	echo get_the_password_form();
+    echo get_the_password_form();
 }
 ?>
 
 <?php
-if ( post_password_required() ) {
-	echo 'This post is password protected' . get_the_password_form();
+if (post_password_required()) {
+    echo 'This post is password protected' . get_the_password_form();
 } else {
-	the_excerpt();
+    the_excerpt();
 }
 ?>
 
 <?php
-function alpha_the_excerpt( $excerpt ) {
-	if ( ! post_password_required() ) {
-		return $excerpt;
-	} else {
-		echo get_the_password_form();
-	}
+function alpha_the_excerpt($excerpt)
+{
+    if (!post_password_required()) {
+        return $excerpt;
+    } else {
+        echo get_the_password_form();
+    }
 }
 
-add_filter( 'the_excerpt', 'alpha_the_excerpt' );
+add_filter('the_excerpt', 'alpha_the_excerpt');
 ?>
 
 <?php
-function alpha_protected_title_change() {
-	return '%s';
+function alpha_protected_title_change()
+{
+    return '%s';
 }
 
-add_filter( 'protected_title_format', 'alpha_protected_title_change' );
+add_filter('protected_title_format', 'alpha_protected_title_change');
 ?>
 
 <?php
-register_nav_menus( array(
-	'topmenu'    => __( 'Top Menu', 'alpha' ),
-	'footermenu' => __( 'Footer Menu', 'alpha' ),
-) );
+register_nav_menus(array(
+    'topmenu' => __('Top Menu', 'alpha'),
+    'footermenu' => __('Footer Menu', 'alpha'),
+));
 ?>
 
 <?php
-wp_nav_menu( array(
-	'theme_location' => 'topmenu',
-	'menu_id'        => 'topmenucontainer',
-	'menu_class'     => 'list-inline text-center'
-) );
+wp_nav_menu(array(
+    'theme_location' => 'topmenu',
+    'menu_id' => 'topmenucontainer',
+    'menu_class' => 'list-inline text-center'
+));
 ?>
 
 <?php
 
-if ( site_url() == 'http://localhost/lwhh.com' ) {
-	define( 'VERSION', time() );
+if (site_url() == 'http://localhost/lwhh.com') {
+    define('VERSION', time());
 } else {
-	define( 'VERSION', wp_get_theme()->get( 'Version' ) );
+    define('VERSION', wp_get_theme()->get('Version'));
 }
 
-function alpha_assets() {
-	wp_enqueue_style( 'featherlight-css', '//cdn.rawgit.com/noelboss/featherlight/1.7.13/release/featherlight.min.css' );
-	wp_enqueue_style( 'bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' );
-	wp_enqueue_style( 'style', get_stylesheet_uri(), null, VERSION );
+function alpha_assets()
+{
+    wp_enqueue_style('featherlight-css', '//cdn.rawgit.com/noelboss/featherlight/1.7.13/release/featherlight.min.css');
+    wp_enqueue_style('bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
+    wp_enqueue_style('style', get_stylesheet_uri(), null, VERSION);
 
-	wp_enqueue_script( 'featherlight-js', '//cdn.rawgit.com/noelboss/featherlight/1.7.13/release/featherlight.min.js', array( 'jquery' ), '0.0.1', true );
-	wp_enqueue_script( 'alpha-main', get_theme_file_uri( '/assets/js/main.js' ), array(
-		'jquery',
-		'featherlight-js'
-	), VERSION, true );
+    wp_enqueue_script('featherlight-js', '//cdn.rawgit.com/noelboss/featherlight/1.7.13/release/featherlight.min.js', array('jquery'), '0.0.1', true);
+    wp_enqueue_script('alpha-main', get_theme_file_uri('/assets/js/main.js'), array(
+        'jquery',
+        'featherlight-js'
+    ), VERSION, true);
 }
 
-add_action( 'wp_enqueue_scripts', 'alpha_assets' );
+add_action('wp_enqueue_scripts', 'alpha_assets');
 ?>
 
 #!/usr/bin/env php
 <?php
-foreach ( glob( "*.css" ) as $css ) {
-	echo "wp_enqueue_style( 'wptheme-{$css}', get_template_directory_uri() . '/css/{$css}', null, '1.0' );\n";
+foreach (glob("*.css") as $css) {
+    echo "wp_enqueue_style( 'wptheme-{$css}', get_template_directory_uri() . '/css/{$css}', null, '1.0' );\n";
 }
 ?>
 #!/usr/bin/env php
 <?php
-foreach ( glob( "*.js" ) as $js ) {
-	echo "wp_enqueue_script( 'wptheme-{$js}', get_template_directory_uri() . '/js/{$js}', array('jquery'), '1.0', true );\n";
+foreach (glob("*.js") as $js) {
+    echo "wp_enqueue_script( 'wptheme-{$js}', get_template_directory_uri() . '/js/{$js}', array('jquery'), '1.0', true );\n";
 }
 ?>
 
@@ -369,30 +392,30 @@ foreach ( glob( "*.js" ) as $js ) {
 //6. copy the key and replace
 ?>
 <?php
-if ( has_post_thumbnail() ) {
-	$thumbnail_url = get_the_post_thumbnail_url( null, 'large' );
-	echo '<a href="' . $thumbnail_url . '" data-featherlight="image">';
-	the_post_thumbnail( 'large', array( 'class' => 'img-fluid"' ) );
-	echo '</a>';
+if (has_post_thumbnail()) {
+    $thumbnail_url = get_the_post_thumbnail_url(null, 'large');
+    echo '<a href="' . $thumbnail_url . '" data-featherlight="image">';
+    the_post_thumbnail('large', array('class' => 'img-fluid"'));
+    echo '</a>';
 };
 ?>
 
 <?php
-if ( has_post_thumbnail() ) {
-	$thumbnail_url = get_the_post_thumbnail_url( null, 'large' );
-	printf( '<a href="%s" data-featherlight="image">', $thumbnail_url );
-	the_post_thumbnail( 'large', array( 'class' => 'img-fluid"' ) );
-	echo '</a>';
+if (has_post_thumbnail()) {
+    $thumbnail_url = get_the_post_thumbnail_url(null, 'large');
+    printf('<a href="%s" data-featherlight="image">', $thumbnail_url);
+    the_post_thumbnail('large', array('class' => 'img-fluid"'));
+    echo '</a>';
 };
 ?>
 
 // OR
 
 <?php
-if ( has_post_thumbnail() ) {
-	echo '<a class="popup" href="" data-featherlight="image">';
-	the_post_thumbnail( 'large', array( 'class' => 'img-fluid"' ) );
-	echo '</a>';
+if (has_post_thumbnail()) {
+    echo '<a class="popup" href="" data-featherlight="image">';
+    the_post_thumbnail('large', array('class' => 'img-fluid"'));
+    echo '</a>';
 };
 ?>
 
@@ -410,29 +433,30 @@ if ( has_post_thumbnail() ) {
 
 <?php
 
-$alpha_feat_image = get_the_post_thumbnail_url( null, 'large' );
+$alpha_feat_image = get_the_post_thumbnail_url(null, 'large');
 ?>
 <div class="header page-header" style="background-image: url(<?php echo $alpha_feat_image; ?>)">
 
     OR
 
-	<?php
-	function alpha_about_page_template_banner() {
+    <?php
+    function alpha_about_page_template_banner()
+    {
 
-		if ( is_page() ) {
-			$alpha_feat_image = get_the_post_thumbnail_url( null, 'large' );
-			?>
+        if (is_page()) {
+            $alpha_feat_image = get_the_post_thumbnail_url(null, 'large');
+            ?>
             <style>
                 .page-header {
                     background-image: url('<?php echo $alpha_feat_image; ?>');
                 }
             </style>
-			<?php
-		}
+            <?php
+        }
 
-		if ( is_front_page() ) {
-			if ( current_theme_supports( 'custom-header' ) ) {
-				?>
+        if (is_front_page()) {
+            if (current_theme_supports('custom-header')) {
+                ?>
                 <style>
                     .header {
                         background-image: url(<?php echo header_image(); ?>);
@@ -447,132 +471,160 @@ $alpha_feat_image = get_the_post_thumbnail_url( null, 'large' );
 					?>
                     }
                 </style>
-				<?php
-			}
-		}
+                <?php
+            }
+        }
 
-	}
+    }
 
-	add_action( 'wp_head', 'alpha_about_page_template_banner', 11 );
-	?>
+    add_action('wp_head', 'alpha_about_page_template_banner', 11);
+    ?>
 
-	<?php if ( current_theme_supports( 'custom-logo' ) ): ?>
+    <?php if (current_theme_supports('custom-logo')): ?>
         <div class="header-logo text-center">
-			<?php the_custom_logo(); ?>
+            <?php the_custom_logo(); ?>
         </div>
-	<?php endif; ?>
+    <?php endif; ?>
 
 
-	<?php
-	$placeholder_text = get_post_meta( get_the_ID(), 'placeholder', true );
-	$hint             = get_post_meta( get_the_ID(), 'hint', true );
-	?>
+    <?php
+    $placeholder_text = get_post_meta(get_the_ID(), 'placeholder', true);
+    $hint             = get_post_meta(get_the_ID(), 'hint', true);
+    ?>
 
-	<?php echo esc_attr( $placeholder_text ); ?>
-	<?php echo esc_html( $hint ); ?>
+    <?php echo esc_attr($placeholder_text); ?>
+    <?php echo esc_html($hint); ?>
 
     /**********************
     ** Custom Post Query **
     ***********************/
-	<?php
+    <?php
 
-	$_p = get_posts( array(
-		'post__in' => array( 30, 7, 36 ), // Post ID
-		'order'    => 'asc'
-	) );
+    $_p = get_posts(array(
+        'post__in' => array(30, 7, 36), // Post ID
+        'order' => 'asc'
+    ));
 
-	$_p = get_posts( array(
-		'post__in'       => array( 30, 7, 36 ), // Post ID
-		'orderby'        => 'post__in',
-		'posts_per_page' => 2,
-	) );
+    $_p = get_posts(array(
+        'post__in' => array(30, 7, 36), // Post ID
+        'orderby' => 'post__in',
+        'posts_per_page' => 2,
+    ));
 
-	foreach ( $_p as $post ) {
-		setup_postdata( $post );
-		?>
+    foreach ($_p as $post) {
+        setup_postdata($post);
+        ?>
         <h2><?php the_title(); ?></h2>
-		<?php
-	}
-	wp_reset_postdata();
-	?>
+        <?php
+    }
+    wp_reset_postdata();
+    ?>
     /***************************
     ** Custom Post Pagination **
     ****************************/
-	<?php
-	$paged          = get_query_var( "paged" ) ? get_query_var( "paged" ) : 1;
-	$posts_per_page = 2;
-	$total          = 9;
-	$post_ids       = array( 30, 7, 36 );
-	$_p             = get_posts( array(
-//	'post__in'       => $post_ids,
-		'author__in'     => array( 1 ),
-		'numberposts'    => $total,
-		'orderby'        => 'post__in',
-		'posts_per_page' => 2,
-		'paged'          => $paged,
-	) );
+    <?php
+    $paged     = get_query_var('paged', 1);
+    $the_query = new WP_Query(array(
+        'post_type' => 'post',
+        'paged' => $paged,
+        'posts_per_page' => 3,
+    ));
+    ?>
 
-	foreach ( $_p as $post ) {
-		setup_postdata( $post );
-		?>
+    <?php if ($the_query->have_posts()) : ?>
+
+        <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
+            <h2><?php the_title(); ?></h2>
+        <?php endwhile; ?>
+
+        <?php echo paginate_links(array(
+            'total' => $the_query->max_num_pages,
+            'current' => $paged,
+            'prev_next' => false,
+        )); ?>
+
+        <?php wp_reset_postdata(); ?>
+
+    <?php endif; ?>
+
+
+
+
+    <?php
+    $paged          = get_query_var("paged") ? get_query_var("paged") : 1;
+    $posts_per_page = 2;
+    $total          = 9;
+    $post_ids       = array(30, 7, 36);
+    $_p             = get_posts(array(
+//	'post__in'       => $post_ids,
+        'author__in' => array(1),
+        'numberposts' => $total,
+        'orderby' => 'post__in',
+        'posts_per_page' => 2,
+        'paged' => $paged,
+    ));
+
+    foreach ($_p as $post) {
+        setup_postdata($post);
+        ?>
         <h2><?php the_title(); ?></h2>
-		<?php
-	}
-	wp_reset_postdata();
-	?>
+        <?php
+    }
+    wp_reset_postdata();
+    ?>
 
     <div class="container post-pagination">
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-8">
-				<?php
-				echo paginate_links( array(
+                <?php
+                echo paginate_links(array(
 //					'total' => ceil( count( $post_ids ) / $posts_per_page )
-					'total' => ceil( $total / $posts_per_page )
-				) );
-				?>
+                    'total' => ceil($total / $posts_per_page)
+                ));
+                ?>
             </div>
         </div>
     </div>
     /******************************
     ** WP_Query Class Pagination **
     *******************************/
-	<?php
-	$paged          = get_query_var( "paged" ) ? get_query_var( "paged" ) : 1;
-	$posts_per_page = 2;
-	$total          = 9;
-	$post_ids       = array( 30, 7, 36 );
-	$_p             = new WP_Query( array(
+    <?php
+    $paged          = get_query_var("paged") ? get_query_var("paged") : 1;
+    $posts_per_page = 2;
+    $total          = 9;
+    $post_ids       = array(30, 7, 36);
+    $_p             = new WP_Query(array(
 //	'author__in'     => array( 1 ),
 //	'numberposts'    => $total,
 //	'orderby'        => 'post__in',
 //	'posts_per_page' => 2,
 //	'paged'          => $paged,
-		'category_name'  => 'uncategorized',
-		'posts_per_page' => $posts_per_page,
-		'paged'          => $paged,
-	) );
+        'category_name' => 'uncategorized',
+        'posts_per_page' => $posts_per_page,
+        'paged' => $paged,
+    ));
 
-	while ( $_p->have_Posts() ) {
-		$_p->the_post();
-		?>
+    while ($_p->have_Posts()) {
+        $_p->the_post();
+        ?>
         <h2 class="text-center"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-		<?php
-	}
-	wp_reset_query();
-	?>
+        <?php
+    }
+    wp_reset_query();
+    ?>
 
     <div class="container post-pagination">
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-8">
-				<?php
-				echo paginate_links( array(
-					'total'     => $_p->max_num_pages,
-					'current'   => $paged,
-					'prev_next' => false,
-				) );
-				?>
+                <?php
+                echo paginate_links(array(
+                    'total' => $_p->max_num_pages,
+                    'current' => $paged,
+                    'prev_next' => false,
+                ));
+                ?>
             </div>
         </div>
     </div>
@@ -583,86 +635,86 @@ $alpha_feat_image = get_the_post_thumbnail_url( null, 'large' );
     /******************************************
     ** WP_Query Class Relationship & Joining **
     *******************************************/
-	<?php
-	$paged          = get_query_var( "paged" ) ? get_query_var( "paged" ) : 1;
-	$posts_per_page = 2;
-	$total          = 9;
-	$post_ids       = array( 30, 7, 36 );
-	$_p             = new WP_Query( array(
-		'posts_per_page' => $posts_per_page,
-		'paged'          => $paged,
-		'tax_query'      => array(
-			'relation' => 'OR',
-			array(
-				'taxonomy' => 'category',
-				'field'    => 'slug',
-				'terms'    => array( 'new' )
-			),
-			array(
-				'taxonomy' => 'post_tag',
-				'field'    => 'slug',
-				'terms'    => array( 'special' )
-			)
-		)
-	) );
+    <?php
+    $paged          = get_query_var("paged") ? get_query_var("paged") : 1;
+    $posts_per_page = 2;
+    $total          = 9;
+    $post_ids       = array(30, 7, 36);
+    $_p             = new WP_Query(array(
+        'posts_per_page' => $posts_per_page,
+        'paged' => $paged,
+        'tax_query' => array(
+            'relation' => 'OR',
+            array(
+                'taxonomy' => 'category',
+                'field' => 'slug',
+                'terms' => array('new')
+            ),
+            array(
+                'taxonomy' => 'post_tag',
+                'field' => 'slug',
+                'terms' => array('special')
+            )
+        )
+    ));
 
-	while ( $_p->have_posts() ) {
-		$_p->the_post();
-		?>
+    while ($_p->have_posts()) {
+        $_p->the_post();
+        ?>
         <h2 class="text-center"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-		<?php
-	}
-	wp_reset_query();
-	?>
+        <?php
+    }
+    wp_reset_query();
+    ?>
 
     <div class="container post-pagination">
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-8">
-				<?php
-				echo paginate_links( array(
-					'total'     => $_p->max_num_pages,
-					'current'   => $paged,
-					'prev_next' => false,
-				) );
-				?>
+                <?php
+                echo paginate_links(array(
+                    'total' => $_p->max_num_pages,
+                    'current' => $paged,
+                    'prev_next' => false,
+                ));
+                ?>
             </div>
         </div>
     </div>
     /***************************************
     ** WP_Query - Search With Date & Post **
     ****************************************/
-	<?php
-	$paged          = get_query_var( "paged" ) ? get_query_var( "paged" ) : 1;
-	$posts_per_page = 2;
-	$total          = 9;
-	$post_ids       = array( 30, 7, 36 );
-	$_p             = new WP_Query( array(
-		'monthnum'    => 6,
-		'year'        => 2018,
-		'post_status' => 'draft',
-	) );
+    <?php
+    $paged          = get_query_var("paged") ? get_query_var("paged") : 1;
+    $posts_per_page = 2;
+    $total          = 9;
+    $post_ids       = array(30, 7, 36);
+    $_p             = new WP_Query(array(
+        'monthnum' => 6,
+        'year' => 2018,
+        'post_status' => 'draft',
+    ));
 
-	while ( $_p->have_posts() ) {
-		$_p->the_post();
-		?>
+    while ($_p->have_posts()) {
+        $_p->the_post();
+        ?>
         <h2 class="text-center"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-		<?php
-	}
-	wp_reset_query();
-	?>
+        <?php
+    }
+    wp_reset_query();
+    ?>
 
     <div class="container post-pagination">
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-8">
-				<?php
-				echo paginate_links( array(
-					'total'     => $_p->max_num_pages,
-					'current'   => $paged,
-					'prev_next' => false,
-				) );
-				?>
+                <?php
+                echo paginate_links(array(
+                    'total' => $_p->max_num_pages,
+                    'current' => $paged,
+                    'prev_next' => false,
+                ));
+                ?>
             </div>
         </div>
     </div>
@@ -684,98 +736,98 @@ $alpha_feat_image = get_the_post_thumbnail_url( null, 'large' );
     3. copy the file (example.php) to inc folder and name it tgm.php
     4. change in tgm.php
 
-	<?php
-	require_once get_theme_file_path( '/lib/class-tgm-plugin-activation.php' );
-	$plugins = array(
-		array(
-			'name'     => 'ACF',
-			'slug'     => 'advanced-custom-fields',
-			'required' => false,
-		),
-	);
-	?>
+    <?php
+    require_once get_theme_file_path('/lib/class-tgm-plugin-activation.php');
+    $plugins = array(
+        array(
+            'name' => 'ACF',
+            'slug' => 'advanced-custom-fields',
+            'required' => false,
+        ),
+    );
+    ?>
 
     5. add in functions.php
-	<?php require_once get_theme_file_path( '/inc/tgm.php' ); ?>
+    <?php require_once get_theme_file_path('/inc/tgm.php'); ?>
 
     6. add in functions.php for ACF updated plugin
-	<?php define( 'ACF_EARLY_ACCESS', '5' ); ?>
+    <?php define('ACF_EARLY_ACCESS', '5'); ?>
 
     /***********************************
     ** Display Data in ACF Meta field **
     ************************************/
-	<?php
-	if ( get_post_format() == "image" && function_exists( "the_field" ) ):
-		?>
+    <?php
+    if (get_post_format() == "image" && function_exists("the_field")):
+        ?>
         <div class="metainfo">
 
-            <strong>Camera Model: </strong><?php the_field( "camera_model" ); ?>
+            <strong>Camera Model: </strong><?php the_field("camera_model"); ?>
             <br>
 
             <strong>Location: </strong>
-			<?php
-			$alpha_location = get_field( "location" );
-			echo esc_html( $alpha_location );
-			?>
+            <?php
+            $alpha_location = get_field("location");
+            echo esc_html($alpha_location);
+            ?>
             <br>
 
-            <strong>Date: </strong><?php the_field( "date" ); ?><br>
-            <strong>Camera Model: </strong><?php the_field( "camera_model" ); ?>
+            <strong>Date: </strong><?php the_field("date"); ?><br>
+            <strong>Camera Model: </strong><?php the_field("camera_model"); ?>
             <br>
-			<?php if ( get_field( "licensed" ) ): ?>
-				<?php echo apply_filters( "the_content", get_field( "license_information" ) ); ?>
-			<?php endif; ?>
+            <?php if (get_field("licensed")): ?>
+                <?php echo apply_filters("the_content", get_field("license_information")); ?>
+            <?php endif; ?>
 
         </div>
-	<?php endif; ?>
+    <?php endif; ?>
 
+    <?php
     /********************
-    ** ACF Image field **
-    *********************/
-	<?php
-	$alpha_image         = get_field( "image" );
-	$alpha_image_details = wp_get_attachment_image_src( $alpha_image, "alpha-square" );
-	echo "<img src=" . esc_url( $alpha_image_details[0] ) . ">";
-	?>
+     ** ACF Image field **
+     *********************/
+    $alpha_image         = get_field("image");
+    $alpha_image_details = wp_get_attachment_image_src($alpha_image, "alpha-square");
+    echo "<img src=" . esc_url($alpha_image_details[0]) . ">";
+    ?>
 
-
+    <?php
     /*******************************
-    ** Custom Post With Shortcode **
-    ********************************/
+     ** Custom Post With Shortcode **
+     ********************************/
     // Image Gallery Custom Post Type Function
-	<?php
-	function shakir_image_gallery() {
-		register_post_type( 'shakir_gallery',
-			array(
-				'labels'        => array(
-					'name' => __( 'Image Gallery' ),
-				),
-				'public'        => true,
-				'menu_position' => 20,
-				'supports'      => array( 'title', 'thumbnail' )
-			)
-		);
-	}
+    function custom_image_gallery()
+    {
+        register_post_type('custom_gallery',
+            array(
+                'labels' => array(
+                    'name' => __('Image Gallery'),
+                ),
+                'public' => true,
+                'menu_position' => 20,
+                'supports' => array('title', 'thumbnail')
+            )
+        );
+    }
 
-	// Hooking up custom post type function to theme
-	add_action( 'init', 'shakir_image_gallery' );
+    // Hooking up custom post type function to theme
+    add_action('init', 'custom_image_gallery');
 
-	function shakir_image() {
-	echo '
+    function custom_image() {
+    echo '
     <div class="image-with-text">
         <div class="container">
             <div class="row">'
-	?>
-	<?php
-	$loop = new WP_Query( array(
-		'post_type'      => 'shakir_gallery',
-		'posts_per_page' => 4
-	) );
-	while ( $loop->have_posts() ) {
-		$loop->the_post();
-		$image_gallery_link_one = get_post_meta( get_the_ID(), 'image_gallery_link_one', true );
-		$page_thumb             = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full' );
-		?>
+    ?>
+    <?php
+    $loop = new WP_Query(array(
+        'post_type' => 'custom_gallery',
+        'posts_per_page' => 4
+    ));
+    while ($loop->have_posts()) {
+        $loop->the_post();
+        $image_gallery_link_one = get_post_meta(get_the_ID(), 'image_gallery_link_one', true);
+        $page_thumb             = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'full');
+        ?>
 
         <div class="col-lg-6 d-flex justify-content-center">
             <div class="background-image" style="background-image:url('<?php echo $page_thumb[0]; ?>');">
@@ -785,56 +837,58 @@ $alpha_feat_image = get_the_post_thumbnail_url( null, 'large' );
             </div>
         </div>
 
-	<?php } ?>
+    <?php } ?>
 </div>
-</div>
-</div>
+    </div>
+    </div>
 <?php
 
 }
-add_shortcode( 'shakir', 'shakir_image' );
-
+add_shortcode('shakir', 'custom_image');
 
 
 /*******************************
  ** Custom Post With Shortcode **
  ********************************/
 // Image Gallery Custom Post Type Function
-function shakir_image_gallery() {
-	register_post_type(
-		'shakir_gallery',
-		array(
-			'labels'        => array(
-				'name' => __( 'Image Gallery' ),
-			),
-			'public'        => true,
-			'menu_position' => 20,
-			'supports'      => array( 'title', 'editor', 'thumbnail', 'custom-fields' )
-		)
-	);
+function shakir_image_gallery()
+{
+    register_post_type(
+        'shakir_gallery',
+        array(
+            'labels' => array(
+                'name' => __('Image Gallery'),
+            ),
+            'public' => true,
+            'menu_position' => 20,
+            'supports' => array('title', 'editor', 'thumbnail', 'custom-fields')
+        )
+    );
 }
-add_action( 'init', 'shakir_image_gallery' );
+
+add_action('init', 'shakir_image_gallery');
 
 // Image Gallery Shortcode
-function shakir_image() {
-	$loop = new WP_Query( array(
-		'post_type'      => 'shakir_gallery',
-		'orderby'        => 'rand',
-		'posts_per_page' => - 1,
-	) );
+function shakir_image()
+{
+    $loop = new WP_Query(array(
+        'post_type' => 'shakir_gallery',
+        'orderby' => 'rand',
+        'posts_per_page' => -1,
+    ));
 
-	if ( $loop->have_posts() ) {
+    if ($loop->have_posts()) {
 
-		$output = '<section class="image-gallery"><div class="container"><div class="row">';
-		while ( $loop->have_posts() ) {
-			$loop->the_post();
-			$image_gallery_link = get_post_meta( get_the_ID(), 'image_gallery_link', true );
+        $output = '<section class="image-gallery"><div class="container"><div class="row">';
+        while ($loop->have_posts()) {
+            $loop->the_post();
+            $image_gallery_link = get_post_meta(get_the_ID(), 'image_gallery_link', true);
 
-			$output .= '
+            $output .= '
                                 <div class="col-lg-3 d-flex justify-content-center mb-5">
 					<div class="card" style="width: 18rem;">
                                         	<a href="' . $image_gallery_link . '">      
-							' . get_the_post_thumbnail( null, "large", "array(\"class\"=>\"card-img-top\")" ) . '
+							' . get_the_post_thumbnail(null, "large", "array(\"class\"=>\"card-img-top\")") . '
                                         	</a>
 						<div class="card-body">
 							<h5 class="card-title text-center">
@@ -848,15 +902,16 @@ function shakir_image() {
 						</div>
                                         </div>
                                 </div>';
-		}
-		$output .= '</div></div></section>';
-	} else {
-		$output = "Content Not Added.";
-	}
+        }
+        $output .= '</div></div></section>';
+    } else {
+        $output = "Content Not Added.";
+    }
 
-	return $output;
+    return $output;
 }
-add_shortcode( 'beachesliving_random_image_gallery', 'shakir_image' );
+
+add_shortcode('beachesliving_random_image_gallery', 'shakir_image');
 ?>
 
 
@@ -949,28 +1004,66 @@ add_shortcode( 'beachesliving_random_image_gallery', 'shakir_image' );
 **********************/
 <?php
 // Create Table
-function theme_database() {
-	global $wpdb;
-	$prefix = $wpdb->prefix;
-	$table  = $prefix . 'sujan';
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	dbDelta( "CREATE TABLE $table(id INT AUTO_INCREMENT, name varchar( 250 ), UNIQUE KEY id( id ) )" );
+function theme_database()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . "sujan";
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta("CREATE TABLE $table_name(id INT AUTO_INCREMENT, name varchar( 250 ), UNIQUE KEY id( id ) )");
 }
-add_action( 'after_setup_theme', 'theme_database' );
+
+add_action('after_setup_theme', 'theme_database');
+
+// Crate Table In Plugin
+function bdetector_activate()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . "bdetector";
+    if ($wpdb->get_var('SHOW TABLES LIKE ' . $table_name) != $table_name) {
+        $sql = 'CREATE TABLE ' . $table_name . '(
+			id INTEGER(10) UNSIGNED AUTO_INCREMENT,
+			hit_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			user_agent VARCHAR(255),
+			PRIMARY KEY (id) )';
+
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        dbDelta($sql);
+        add_option('bdetector_database_version', '1.0');
+    }
+}
+
+register_activation_hook(__FILE__, 'bdetector_activate');
 
 //Read Single Value // Write below code in the page template or where you want to show
 global $wpdb;
-$prefix = $wpdb->prefix;
+$prefix    = $wpdb->prefix;
 $usertable = $prefix . 'users';
-echo $wpdb->get_var( "SELECT user_login FROM $usertable WHERE id = 1", 2, 1 );
+echo $wpdb->get_var("SELECT user_login FROM $usertable WHERE id = 1", 2, 1);
+
+//		 Read Single Value
+global $wpdb;
+$result = $wpdb->get_var('SELECT post_title FROM wp_posts WHERE ID = 1');
+$result = $wpdb->get_var('SELECT * FROM wp_posts WHERE ID = 2', 5);
+$result = $wpdb->get_var('SELECT * FROM wp_posts', 5, 1);
+echo $result;
+
+//		 Read Row
+global $wpdb;
+$obj = $wpdb->get_row('SELECT * FROM wp_posts', OBJECT, 1);
+echo $obj->post_title;
+
+$obj = $wpdb->get_row('SELECT * FROM wp_posts', ARRAY_A, 1);
+echo $obj['post_title'];
+
+$obj = $wpdb->get_row('SELECT * FROM wp_posts', ARRAY_N, 1);
+echo $obj[5];
 
 //Read Multiple Value // Write below code in the page template or where you want to show
 global $wpdb;
-$prefix = $wpdb->prefix;
-$userposts = $prefix . 'posts';
-$posts = $wpdb->get_results( "SELECT * FROM $userposts WHERE post_type = 'post' and post_status = 'publish'", OBJECT_K );
-foreach ( $posts as $post ) {
-	echo $post->post_title . "<br>";
+$table_name = $wpdb->prefix . 'posts';
+$results    = $wpdb->get_results("SELECT * FROM $table_name WHERE post_type = 'post' AND post_status = 'publish'", OBJECT_K);
+foreach ($results as $result) {
+    echo $result->post_title . "<br>";
 }
 ?>
 
@@ -984,23 +1077,25 @@ foreach ( $posts as $post ) {
 
 <?php
 // Write below code in functions.php
-function theme_database() {
-	global $wpdb;
-	$prefix = $wpdb->prefix;
-	$table  = $prefix . 'sujan';
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	dbDelta( "CREATE TABLE $table(id INT AUTO_INCREMENT, name varchar( 250 ), UNIQUE KEY id( id ) )" );
+function theme_database()
+{
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+    $table  = $prefix . 'sujan';
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta("CREATE TABLE $table(id INT AUTO_INCREMENT, name varchar( 250 ), UNIQUE KEY id( id ) )");
 }
-add_action( 'after_setup_theme', 'theme_database' );
+
+add_action('after_setup_theme', 'theme_database');
 
 
 // Form Data Insert
-if ( isset( $_POST['namesubmit'] ) ) {
-	$tablename = $wpdb->prefix . 'sujan';
-	$name      = $_POST['name'];
-	$wpdb->insert( $tablename, array(
-		'name' => $name,
-	) );
+if (isset($_POST['namesubmit'])) {
+    $tablename = $wpdb->prefix . 'sujan';
+    $name      = $_POST['name'];
+    $wpdb->insert($tablename, array(
+        'name' => $name,
+    ));
 }
 ?>
 /***********************
@@ -1011,38 +1106,38 @@ if ( isset( $_POST['namesubmit'] ) ) {
 <?php
 global $wpdb;
 $tablename = $wpdb->prefix . 'sujan';
-$infos = $wpdb->get_results( "SELECT * FROM $tablename" );
-foreach ( $infos as $info ) {
-	$id       = $info->id;
-	$editlink = '?edit' . $id;
-	echo $id . ' ' . $info->name . ' <a href="' . $editlink . '">edit</a>' . "<br>";
+$infos     = $wpdb->get_results("SELECT * FROM $tablename");
+foreach ($infos as $info) {
+    $id       = $info->id;
+    $editlink = '?edit' . $id;
+    echo $id . ' ' . $info->name . ' <a href="' . $editlink . '">edit</a>' . "<br>";
 }
 
 ?>
 
 <?php
-if ( isset( $_GET['edit'] ) ) :
+if (isset($_GET['edit'])) :
 
-$id = $_GET['edit'];
-$value = $wpdb->get_var( "SELECT name FROM $tablename WHERE id = $id" );
-?>
-<form action="" method="post">
-    <input type="text" name="name" placeholder="Please type your name" value="<?php echo $value; ?>">
-    <input type="submit" value="edit" name="nameupdate">
-</form>
+    $id = $_GET['edit'];
+    $value = $wpdb->get_var("SELECT name FROM $tablename WHERE id = $id");
+    ?>
+    <form action="" method="post">
+        <input type="text" name="name" placeholder="Please type your name" value="<?php echo $value; ?>">
+        <input type="submit" value="edit" name="nameupdate">
+    </form>
 <?php endif; ?>
 
 <?php
 //In Database
-$id = $_GET['edit'];
+$id        = $_GET['edit'];
 $tablename = $wpdb->prefix . 'sujan';
-$data = $_POST['name'];
-if ( isset( $_POST['nameupdate'] ) ) {
+$data      = $_POST['name'];
+if (isset($_POST['nameupdate'])) {
 
-	$wpdb->replace( $tablename, array(
-		'id'   => $id,
-		'name' => $data
-	) );
+    $wpdb->replace($tablename, array(
+        'id' => $id,
+        'name' => $data
+    ));
 }
 ?>
 /*******************
@@ -1052,27 +1147,27 @@ if ( isset( $_POST['nameupdate'] ) ) {
 // Search Form
 // Add the function to the template
 <?php
-if(is_search()){
-?>
-<h3>You searched for: <?php the_search_query(); ?></h3>
-<?php
+if (is_search()) {
+    ?>
+    <h3>You searched for: <?php the_search_query(); ?></h3>
+    <?php
 }
 ?>
 
 <?php
-if(! have_posts() && is_search()){
-?>
-<h4>
-	<?php _e( 'No result found', 'textdomain' ); ?>
-</h4>
-<?php
+if (!have_posts() && is_search()) {
+    ?>
+    <h4>
+        <?php _e('No result found', 'textdomain'); ?>
+    </h4>
+    <?php
 }
 ?>
 
 <?php echo get_search_form(); ?>
 
 // Add below code to searchpage.php
-<form role="search" method="get" id="searchform" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+<form role="search" method="get" id="searchform" action="<?php echo esc_url(home_url('/')); ?>">
     <div>
         <label for="s" class="screen-reader-text">Search for: </label>
         <input type="text" value="" name="s" id="s">
@@ -1084,21 +1179,21 @@ if(! have_posts() && is_search()){
 // Settings API
 // Add below code to functions.php
 <?php
-    function menu_options()
-    {
+function menu_options()
+{
     add_settings_field('header_text', 'Header Text', 'ekhane_design_thakbe', 'general');
     register_setting('general', 'header_text');
-    }
+}
 
-    add_action('admin_init', 'menu_options');
+add_action('admin_init', 'menu_options');
 
-    function ekhane_design_thakbe()
-    {
+function ekhane_design_thakbe()
+{
     echo '<input type="text" name="header_text" class="regular-text" value="' . get_option('header_text') . '">';
-    }
+}
 
-    // Read data from template
-    echo get_option('header_text');
+// Read data from template
+echo get_option('header_text');
 
 
 // Dynamic Filtering like Mixitup Isotop Etc
@@ -1130,7 +1225,7 @@ function theme_custom_post()
 }
 
 add_action('init', 'theme_custom_post');
-
+?>
 
 //2. for menu or button
 <div class="filter-button">
@@ -1144,31 +1239,31 @@ add_action('init', 'theme_custom_post');
             echo '<li><button class="button" data-filter=".' . $single_category->slug . '"><i class="fas fa-bolt"></i>' . $single_category->name . '</button></li>';
         }
         ?>
-</ul>
+    </ul>
 </div>
 
 // 3. for post
 <div class="post-section">
     <div class="container">
         <div class="row grid">
-			<?php
-			$product_post = null;
-			$product_post = new WP_Query( array(
-				'post_type'      => 'products',
-				'posts_per_page' => - 1,
-			) );
-			if ( $product_post->have_posts() ) {
-				while ( $product_post->have_posts() ) {
-					$product_post->the_post();
-					$product_terms = get_the_terms( get_the_ID(), 'product_category' );
-					?>
-                    <div class="col-md-4 item <?php foreach ( $product_terms as $product_term ) {
-						echo $product_term->slug . ' ';
-					} ?>">
+            <?php
+            $product_post = null;
+            $product_post = new WP_Query(array(
+                'post_type' => 'products',
+                'posts_per_page' => -1,
+            ));
+            if ($product_post->have_posts()) {
+                while ($product_post->have_posts()) {
+                    $product_post->the_post();
+                    $product_terms = get_the_terms(get_the_ID(), 'product_category');
+                    ?>
+                    <div class="col-md-4 item <?php foreach ($product_terms as $product_term) {
+                        echo $product_term->slug . ' ';
+                    } ?>">
                         <div class="single-post">
                             <h5 class="post-heading">
                                 <a href="<?php the_permalink(); ?>">
-									<?php the_title(); ?>
+                                    <?php the_title(); ?>
                                 </a>
                             </h5>
                             <div class="thumbnail">
@@ -1180,7 +1275,7 @@ add_action('init', 'theme_custom_post');
                                     <a href=""><i class="fab fa-pinterest"></i></a>
                                 </div>
                             </div>
-							<?php the_content(); ?>
+                            <?php the_content(); ?>
                             <div class="row">
                                 <div class="col-md-7">
                                     <h4>$166.44</h4>
@@ -1193,12 +1288,12 @@ add_action('init', 'theme_custom_post');
                             </div>
                         </div>
                     </div>
-					<?php
-				}
-			} else {
-				echo "No Posts";
-			}
-			?>
+                    <?php
+                }
+            } else {
+                echo "No Posts";
+            }
+            ?>
 
         </div>
     </div>
@@ -1221,29 +1316,32 @@ add_action('init', 'theme_custom_post');
 // 2. Keep File "class.redux-plugin.php", "index.php", "redux-framework.php"
 // include below files in to functions.php and write code to barebones-config.php
 <?php
-include_once( 'lib/redux/redux-framework.php' );
-include_once( 'lib/redux/sample/barebones-config.php' );
+include_once('lib/redux/redux-framework.php');
+include_once('lib/redux/sample/barebones-config.php');
 
 
 /***********************
  ***** WooCommerce *****
  ************************/
 // To remove anything From anything write in functions.php
-remove_action( '', '', '' );
+remove_action('', '', '');
 
 // To change
-add_filter( 'woocommerce_short_description', 'ts_woocommerce_short_description' );
-function ts_woocommerce_short_description( $desc ) {
-	return strtoupper( $desc );
+add_filter('woocommerce_short_description', 'ts_woocommerce_short_description');
+function ts_woocommerce_short_description($desc)
+{
+    return strtoupper($desc);
 }
 
 /*******************************
  ***** WooCommerce Support *****
  *******************************/
-function ecom_woocommerce_support() {
-	add_theme_support( 'woocommerce' );
+function ecom_woocommerce_support()
+{
+    add_theme_support('woocommerce');
 }
-add_action( 'after_setup_theme', 'ecom_woocommerce_support' );
+
+add_action('after_setup_theme', 'ecom_woocommerce_support');
 ?>
 // Duplicate page.php to woocommerce.php
 // delete default WordPress Loop and write the function <?php woocommerce_content(); ?>
@@ -1262,9 +1360,132 @@ $user_pass  = 'gulugulu';
 $user_email = 'moonluxa@gmail.com';
 $role       = 'administrator';
 wp_insert_user(array(
-'user_login' => $user_login,
-'user_pass' => $user_pass,
-'user_email' => $user_email,
-'role' => $role,
+    'user_login' => $user_login,
+    'user_pass' => $user_pass,
+    'user_email' => $user_email,
+    'role' => $role,
 ));
 ?>
+
+/*********************
+***** Customizer *****
+**********************/
+
+
+<?php
+/**********************************************
+ ** Make a add_action Hook with simple steps **
+ **********************************************/
+//1. Make a function
+function sujan()
+{
+    echo "this is a function.";
+}
+
+//2. Call the function with do_action() hook
+do_action('sujan');
+//3. add anything to the hook
+add_action('sujan', function () {
+    echo "Eita Hobe";
+});
+?>
+
+<php
+/*********************
+***** Child Theme *****
+**********************/
+/*
+1. Make a folder and name it with text domain like underscores-child for underscores them
+2. make a style.css file and keep below code
+*/
+/*
+Theme Name: Underscores Child
+Template: underscores
+Theme URI: https://nixsit.com
+Author: Shakir Ahmad
+Author URI: https://nixsit.com
+Description: This is a Child Theme
+Version: 0.0.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: one-column
+Text Domain: underscores-child
+*/
+/*
+3. make a functions.php for loading parent theme's style
+*/
+
+<?php
+/*********************
+ ***** ShortCode *****
+ *********************/
+// 1. Shortcode
+function philosophy_button( $attributes ) {
+$default           = array(
+'type'  => 'primary',
+'title' => __( "Button", 'philosophy' ),
+'url'   => '',
+);
+$button_attributes = shortcode_atts( $default, $attributes );
+
+return sprintf( '<a target="_blank" class="btn btn--%s full-width" href="%s">%s</a>',
+$button_attributes['type'],
+$button_attributes['url'],
+$button_attributes['title']
+);
+}
+
+add_shortcode( 'button', 'philosophy_button' );
+// To Show [button type='primary' title='Google' url='https://google.com'/]
+
+function philosophy_button2( $attributes, $content = '' ) {
+$default           = array(
+'type'  => 'primary',
+'title' => __( 'Button', 'philosophy' ),
+'url'   => ''
+);
+$button_attributes = shortcode_atts( $default, $attributes );
+
+return sprintf( '<a target="_blank" class="btn btn--%s full-width" href="%s">%s</a>',
+$button_attributes['type'],
+$button_attributes['url'],
+do_shortcode( $content )
+);
+}
+
+add_shortcode( 'button2', 'philosophy_button2' );
+// To Show [button2 type='primary' url='https://google.com']Google[/button2]
+
+
+function philosophy_uppercase( $attributes, $content = '' ) {
+return strtoupper( do_shortcode( $content ) );
+}
+
+add_shortcode( 'uc', 'philosophy_uppercase' );
+// To Show [uc]shakir ahmad[/uc]
+
+
+function philosophy_google_map( $attributes ) {
+$default = array(
+'place'  => 'Dhaka Museum',
+'width'  => '800',
+'height' => '500',
+'zoom'   => '14'
+);
+$params  = shortcode_atts( $default, $attributes );
+$map     = <<<EOD
+<div>
+    <div>
+        <iframe width="{$params['width']}" height="{$params['height']}"
+                src="https://maps.google.com/maps?q={$params['place']}&t=&z={$params['zoom']}&ie=UTF8&iwloc=&output=embed"
+                frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+        </iframe>
+    </div>
+</div>
+EOD;
+
+return $map;
+}
+
+add_shortcode( 'gmap', 'philosophy_google_map' );
+// To Show [gmap place='Jashore' width='500' height='300' zoom='14']
